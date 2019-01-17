@@ -37,12 +37,15 @@ class Compiler {
 
         async.someLimit(compilers, 1, (compiler: any, someCb: Callback<boolean>) => {
           compiler.call(compiler, matchingFiles, compilerOptions, (err: any, compileResult: any) => {
+            if (err) {
+              return someCb(err);
+            }
             if (compileResult === false) {
               // Compiler not compatible, trying the next one
               return someCb(null, false);
             }
             Object.assign(compiledObject, compileResult);
-            someCb(err, true);
+            someCb(null, true);
           });
         }, (err: Error, result: boolean) => {
           if (err) {
